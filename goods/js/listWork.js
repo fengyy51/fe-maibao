@@ -210,7 +210,9 @@
 
         }
         $(".body").delegate(".item","click",function() {
-            window.location.href = "../page/dow.html?id=" + $(this).find('.id').text()+"&actId="+actId;
+            window.location.href = "http://m.maibaoscratch.com/#production_detail/ff74b19d-f7da-4faf-a5fb-f96b9b11d964";
+            // +$(this).find('.id').text();
+            // window.location.href = "../page/dow.html?id=" + $(this).find('.id').text()+"&actId="+actId;
         });
         var now=Date.now();
 
