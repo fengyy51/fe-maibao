@@ -218,13 +218,16 @@
             }else if(now>Date.parse(begin)&&now<Date.parse(end)){
                 // alert(num);
                 // alert(voteMaxNum);
-                if(num>=voteMaxNum){
-                    weui.alert("投票次数已达上限");
-                    $('#submit').attr("disabled",true);
-                    setTimeout(function(){
-                        window.location.href = "../../vote/list.html?actId="+actId;
-                    },1000);
-                }else if (countff==0){
+                //后台限制投票次数
+                // if(num>=voteMaxNum){
+                //     weui.alert("投票次数已达上限");
+                //     $('#submit').attr("disabled",true);
+                //     setTimeout(function(){
+                //         window.location.href = "../../vote/list.html?actId="+actId;
+                //     },1000);
+                // }else
+                console.log(countff);
+                if (countff==0){
                     weui.alert("投票次数已达上限");
                     $('#submit').attr("disabled",true);
                     setTimeout(function(){
