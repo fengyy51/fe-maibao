@@ -180,7 +180,7 @@
             if(description==null){
                 description='暂无介绍';
             }
-            strHtml+='<div class="tupian"> <img src="'+img+'"></div><div class="content"><div id="id"><b>编号:</b><span class="content-span id">'+i+'</div>';
+            strHtml+='<div class="tupian"> <img src="'+img+'"></div><div class="content"><div id="'+i+'"><b>编号:</b><span class="content-span id">'+i+'</div>';
             strHtml+='<div id="proId" style="display: none;">'+proId+'</div>'+
                 '<div id="name"><b>名称：</b>'+'<span class="content-span">'+name+'</span></div>'+
                 '<div id="author"><b>作者：</b>'+'<span class="content-span">'+author+'</span></div>'+
@@ -260,7 +260,7 @@
 //
 //         }
         $(".body").delegate(".item","click",function() {
-            window.location.href = "http://m.maibaoscratch.com/#production_detail/ff74b19d-f7da-4faf-a5fb-f96b9b11d964";
+            window.location.href = "http://m.maibaoscratch.com/#production_detail/"+ $(this).find('.proId').text();
             // +$(this).find('.id').text();
             // window.location.href = "../page/dow.html?id=" + $(this).find('.id').text()+"&actId="+actId;
         });
