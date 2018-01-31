@@ -5,7 +5,7 @@
         $('html').width(window.screen.width);
         $('html').css("overflow-x","hidden");
         var countff=getCookie("countff");//投票次数
-        var openId="yy";
+        // var openId="yy";
         var shareflagvote=getCookie("shareflagvote");//投票分享次数
 
         var num;//已抽奖次数后台返回
@@ -38,7 +38,8 @@
             });
         });
         voteParamContact();
-        voteNumContact();
+        //后台获取投票次数
+        // voteNumContact();
         productInfoContact();
         function voteNumContact() {
             $.ajax({
@@ -53,8 +54,10 @@
                     if(code==200){
                         num=data.data;
                         if(num>=voteMaxNum){
+                            var votecount=num-voteMaxNum;
                             $('#submit').html('已达投票上限');
                             $('#submit').attr("disabled",true);
+                            $('.c-join').html('请投票（选择'+proNum+'个，投票'+votecount+'次）');
                         }
                     }
                 },
@@ -240,7 +243,8 @@
                     }
                     console.log(str);
                     str=str+'@@@'+curTime;
-                    str=str+'@@@'+openId;
+                    //后台限制投票次数
+                    // str=str+'@@@'+openId;
                     console.log(str);
                     if (num == proNum) {
                         // str = str.substring(0, str.length - 1);
