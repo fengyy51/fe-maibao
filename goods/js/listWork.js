@@ -260,7 +260,7 @@
 //
 //         }
         $(".body").delegate(".item","click",function() {
-            window.location.href = "http://m.maibaoscratch.com/#production_detail/"+ $(this).find('.proId').text();
+            window.location.href = "http://m.maibaoscratch.com/#production_detail/"+ $(this).find('#proId').text();
             // +$(this).find('.id').text();
             // window.location.href = "../page/dow.html?id=" + $(this).find('.id').text()+"&actId="+actId;
         });
