@@ -45,29 +45,52 @@ $(document).ready(function() {
             }
             console.log(max);
             console.log(base);
+            //麦宝
             for(var i=0;i<data.data.length;i++){
-                var regItemlist=data.data[i].productInfo.split(";");
-                for(var j=0;j<regItemlist.length;j++) {
-                    var title = regItemlist[j].split("?")[0];
-                    var val = regItemlist[j].split("?")[1];
-                    if (val.indexOf('http:') >= 0) {
-                        var imgFirst = val.split("&")[0];
-                        str += '<div class="c-table"><p><img class="c-tablepic-list" src="' + imgFirst +
-                            '"><span style=" padding-top:2%;font-size: 1rem;padding-right:3%;width:8%;">' +
-                            data.data[i].itemId +
-                            '</span>' +
-                            // '<span class="skillbar clearfix " data-percent="'+0.2+'><span class="skillbar-bar" style="background: #04be02;"></span><span class="skill-bar-percent">'+0.2+'</span></span>'
-                            '<span class="skillbar clearfix " data-percent="' +
-                            // data.data[i].voteNum+
-                            data.data[i].voteNum / base * 100 +
-                            '%""><span class="skillbar-bar" style="background: #04BE02;"></span></span><span class="skill-bar-percent" id="bar" style="float: right; padding-top:2%;margin-right: 1%;">' +
-                            data.data[i].voteNum +
-                            '票</span></p>';
-                    }
+                var img=data.data[i].img;
+                var name=data.data[i].name;
+
+                    str += '<div class="c-table"><p>'+
+                        // '<span>'+name+'</span>'+
+                        '<img class="c-tablepic-list" src="' + img + '">'+
+                        '<span style=" padding-top:2%;font-size: 1rem;padding-right:3%;width:8%;">' +
+                        data.data[i].itemId +
+                        '</span>' +
+                        // '<span class="skillbar clearfix " data-percent="'+0.2+'><span class="skillbar-bar" style="background: #04be02;"></span><span class="skill-bar-percent">'+0.2+'</span></span>'
+                        '<span class="skillbar clearfix " data-percent="' +
+                        // data.data[i].voteNum+
+                        data.data[i].voteNum / base * 100 +
+                        '%""><span class="skillbar-bar" style="background: #04BE02;"></span></span><span class="skill-bar-percent" id="bar" style="float: right; padding-top:2%;margin-right: 1%;">' +
+                        data.data[i].voteNum +
+                        '票</span></p>';
+
                 }
                 $("#products").html(str);
                 setCookie_timedetail("votestatus",true,'24:00:00');
-            }
+
+            // for(var i=0;i<data.data.length;i++){
+            //     var regItemlist=data.data[i].productInfo.split(";");
+            //     for(var j=0;j<regItemlist.length;j++) {
+            //         var title = regItemlist[j].split("?")[0];
+            //         var val = regItemlist[j].split("?")[1];
+            //         if (val.indexOf('http:') >= 0) {
+            //             var imgFirst = val.split("&")[0];
+            //             str += '<div class="c-table"><p><img class="c-tablepic-list" src="' + imgFirst +
+            //                 '"><span style=" padding-top:2%;font-size: 1rem;padding-right:3%;width:8%;">' +
+            //                 data.data[i].itemId +
+            //                 '</span>' +
+            //                 // '<span class="skillbar clearfix " data-percent="'+0.2+'><span class="skillbar-bar" style="background: #04be02;"></span><span class="skill-bar-percent">'+0.2+'</span></span>'
+            //                 '<span class="skillbar clearfix " data-percent="' +
+            //                 // data.data[i].voteNum+
+            //                 data.data[i].voteNum / base * 100 +
+            //                 '%""><span class="skillbar-bar" style="background: #04BE02;"></span></span><span class="skill-bar-percent" id="bar" style="float: right; padding-top:2%;margin-right: 1%;">' +
+            //                 data.data[i].voteNum +
+            //                 '票</span></p>';
+            //         }
+            //     }
+            //     $("#products").html(str);
+            //     setCookie_timedetail("votestatus",true,'24:00:00');
+            // }
             $('.skillbar').each(function() {
                 // console.log($(this));
                 $(this).find('.skillbar-bar').animate({
