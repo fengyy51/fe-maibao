@@ -131,7 +131,12 @@
                 },
                 success: function(data) {
                     var list = data.data;
-                    makeList(list);
+                    var code=data.code;
+                    if(code==200){
+                        makeList(list,list.length);
+                    }else{
+                        console.log(data);
+                    }
                 },
                 error: function(error) {
                     weui.alert('获取作品列表出错');
@@ -139,76 +144,121 @@
                 }
             });
         }
-//一行
-        function makeList(list) {
-            var strHtml='';
-            for(var i=0;i<list.length;i++){
-                var strHtm2='<div class="item">';
-                var regItemlist=list[i].productInfo.split(";");
-                var strHtm3='';
-                for(var j=0;j<regItemlist.length;j++){
-                    var title=regItemlist[j].split("?")[0];
-                    var val=regItemlist[j].split("?")[1];
-                    if(i<6){
-                        if(val.indexOf('http:')>=0){
-                            var imgFirst=val.split("&")[0];
-                            strHtm3+='<div class="tupian"> <img src="'+imgFirst+'"></div><div class="content"><div id='+list[i].id+'><b>编号</b>:<span class="content-span id">'+list[i].id+'</div>';
-                        }
-                         if(val.indexOf('http:')<0){
-                            strHtm3+='<div id="'+title+'"><b>'+title+'</b>:'+'<span class="content-span">'+val+'</span></div>';
-                        }
-                    }
-                    else{
-                        if(val.indexOf('http:')>=0){
-                            var imgFirst=val.split("&")[0];
-                            strHtm3+='<div class="tupian"> <img src="" data-original='+imgFirst+'></div><div class="content"><div id='+list[i].id+'><b>编号</b>:<span class="content-span id">'+list[i].id+'</div>';
-                        }
-                        if(val.indexOf('http:')<0){
-                            strHtm3+='<div id="'+title+'"><b>'+title+'</b>:'+'<span class="content-span">'+val+'</span></div>';
-                        }
-                    }
-                }
-                strHtm2=strHtm2+strHtm3+'</div></div></div>';
-                strHtml=strHtml+strHtm2;
-                $('#listWork .body').html(strHtml);
-                $('.intro1').width(window.screen.width*0.83-120);
-                var wwidth=window.screen.width;
-                $('#text').width(wwidth*0.46);
-                $('#button1 a').width(wwidth*0.16);
-                $('#button2 a').width(wwidth*0.16);
-                $('div.item').height(wwidth*0.4*0.75);
-                $('div.item .tupian').width(wwidth*0.4);
-                $('div.item .tupian').height(wwidth*0.4*0.75);
-                $('.tupian img').width(wwidth*0.4);
-                $('.tupian img').height(wwidth*0.4*0.75);
-                //动态修改content文字大小，行高
-                $('div.item .content').height(wwidth*0.4*0.75);
-                // console.log(j);
-                // console.log($('div.item .content').height());
-                var size=parseInt($('div.item .content').height()/(j+1));
-                // console.log(size);
-                $('div.item .content div').css('line-height',size+'px');
-                $('div.item .content div').css('font-size',(size-5)+'px');
-                // console.log(regItem);
+//        麦宝修改
+        function makeList(list,length) {
+            var strHtml = '';
+            for (var i = 0; i < 20; i++) {
+                strHtml+=showDetail(list[i],i+1);
             }
-            //
-            // for (var i = 0; i < list.length; i++) {
-            //     if(i<8){
-            //         var strHtm2 = '<div class="item"><div class="tupian"><img data-original="" src=' + list[i].productFirst + '></div>' +
-            //             '<div class="content"><div id="'+list[i].id+'" class="no"><b>作品编号</b>：<span class="no1">' + list[i].id + '</span></div>' +
-            //             '<div class="name"><b>作品名称</b>：<span class="name1">' + list[i].brandName+'</span></div>' +
-            //             '<div class="intro"><div class="intro1"><b>作品简介</b>：' + list[i].intro + '</div></div></div></div>';
-            //     }else{
-            //         var strHtm2 = '<div class="item"><div class="tupian"><img data-original=' + list[i].productFirst + ' src=""></div>' +
-            //             '<div class="content"><div id="'+list[i].id+'" class="no"><b>作品编号</b>：<span class="no1">' + list[i].id + '</span></div>' +
-            //             '<div class="name"><b>作品名称</b>：<span class="name1">' + list[i].brandName+'</span></div>' +
-            //             '<div class="intro"><div class="intro1"><b>作品简介</b>：' + list[i].intro + '</div></div></div></div>';
-            //     }
-            //
-            //     strHtml=strHtml+strHtm2;
-            // }
-
+            $('#listWork .body').html(strHtml);
+            $('.intro1').width(window.screen.width*0.83-120);
+            var wwidth=window.screen.width;
+            $('#text').width(wwidth*0.46);
+            $('#button1 a').width(wwidth*0.16);
+            $('#button2 a').width(wwidth*0.16);
+            $('div.item').height(wwidth*0.4*0.75);
+            $('div.item .tupian').width(wwidth*0.4);
+            $('div.item .tupian').height(wwidth*0.4*0.75);
+            $('.tupian img').width(wwidth*0.4);
+            $('.tupian img').height(wwidth*0.4*0.75);
+            //动态修改content文字大小，行高
+            $('div.item .content').height(wwidth*0.4*0.75);
+            // console.log(j);
+            // console.log($('div.item .content').height());
+            var size=parseInt($('div.item .content').height()/6);
+            // console.log(size);
+            $('div.item .content div').css('line-height',size+'px');
+            $('div.item .content div').css('font-size',(size-5)+'px');
         }
+        function showDetail(item,i) {
+            var strHtml='<div class="item">';
+            var proId=item.proId,
+                name=item.name,
+                author=item.author,
+                img=item.img,
+                description=item.description;
+            if(description==null){
+                description='暂无介绍';
+            }
+            strHtml+='<div class="tupian"> <img src="'+img+'"></div><div class="content"><div id="id"><b>编号:</b><span class="content-span id">'+i+'</div>';
+            strHtml+='<div id="proId" style="display: none;">'+proId+'</div>'+
+                '<div id="name"><b>名称：</b>'+'<span class="content-span">'+name+'</span></div>'+
+                '<div id="author"><b>作者：</b>'+'<span class="content-span">'+author+'</span></div>'+
+                '<div id="description"><b>介绍：</b>'+'<span class="content-span">'+description+'</span></div>';
+            strHtml+='</div></div></div>';
+            return strHtml;
+        }
+
+//一
+//         function makeList(list) {
+//             var strHtml='';
+//             for(var i=0;i<list.length;i++){
+//                 var strHtm2='<div class="item">';
+//                 var regItemlist=list[i].productInfo.split(";");
+//                 var strHtm3='';
+//                 for(var j=0;j<regItemlist.length;j++){
+//                     var title=regItemlist[j].split("?")[0];
+//                     var val=regItemlist[j].split("?")[1];
+//                     if(i<6){
+//                         if(val.indexOf('http:')>=0){
+//                             var imgFirst=val.split("&")[0];
+//                             strHtm3+='<div class="tupian"> <img src="'+imgFirst+'"></div><div class="content"><div id='+list[i].id+'><b>编号</b>:<span class="content-span id">'+list[i].id+'</div>';
+//                         }
+//                          if(val.indexOf('http:')<0){
+//                             strHtm3+='<div id="'+title+'"><b>'+title+'</b>:'+'<span class="content-span">'+val+'</span></div>';
+//                         }
+//                     }
+//                     else{
+//                         if(val.indexOf('http:')>=0){
+//                             var imgFirst=val.split("&")[0];
+//                             strHtm3+='<div class="tupian"> <img src="" data-original='+imgFirst+'></div><div class="content"><div id='+list[i].id+'><b>编号</b>:<span class="content-span id">'+list[i].id+'</div>';
+//                         }
+//                         if(val.indexOf('http:')<0){
+//                             strHtm3+='<div id="'+title+'"><b>'+title+'</b>:'+'<span class="content-span">'+val+'</span></div>';
+//                         }
+//                     }
+//                 }
+//                 strHtm2=strHtm2+strHtm3+'</div></div></div>';
+//                 strHtml=strHtml+strHtm2;
+//                 $('#listWork .body').html(strHtml);
+//                 $('.intro1').width(window.screen.width*0.83-120);
+//                 var wwidth=window.screen.width;
+//                 $('#text').width(wwidth*0.46);
+//                 $('#button1 a').width(wwidth*0.16);
+//                 $('#button2 a').width(wwidth*0.16);
+//                 $('div.item').height(wwidth*0.4*0.75);
+//                 $('div.item .tupian').width(wwidth*0.4);
+//                 $('div.item .tupian').height(wwidth*0.4*0.75);
+//                 $('.tupian img').width(wwidth*0.4);
+//                 $('.tupian img').height(wwidth*0.4*0.75);
+//                 //动态修改content文字大小，行高
+//                 $('div.item .content').height(wwidth*0.4*0.75);
+//                 // console.log(j);
+//                 // console.log($('div.item .content').height());
+//                 var size=parseInt($('div.item .content').height()/(j+1));
+//                 // console.log(size);
+//                 $('div.item .content div').css('line-height',size+'px');
+//                 $('div.item .content div').css('font-size',(size-5)+'px');
+//                 // console.log(regItem);
+//             }
+//             //
+//             // for (var i = 0; i < list.length; i++) {
+//             //     if(i<8){
+//             //         var strHtm2 = '<div class="item"><div class="tupian"><img data-original="" src=' + list[i].productFirst + '></div>' +
+//             //             '<div class="content"><div id="'+list[i].id+'" class="no"><b>作品编号</b>：<span class="no1">' + list[i].id + '</span></div>' +
+//             //             '<div class="name"><b>作品名称</b>：<span class="name1">' + list[i].brandName+'</span></div>' +
+//             //             '<div class="intro"><div class="intro1"><b>作品简介</b>：' + list[i].intro + '</div></div></div></div>';
+//             //     }else{
+//             //         var strHtm2 = '<div class="item"><div class="tupian"><img data-original=' + list[i].productFirst + ' src=""></div>' +
+//             //             '<div class="content"><div id="'+list[i].id+'" class="no"><b>作品编号</b>：<span class="no1">' + list[i].id + '</span></div>' +
+//             //             '<div class="name"><b>作品名称</b>：<span class="name1">' + list[i].brandName+'</span></div>' +
+//             //             '<div class="intro"><div class="intro1"><b>作品简介</b>：' + list[i].intro + '</div></div></div></div>';
+//             //     }
+//             //
+//             //     strHtml=strHtml+strHtm2;
+//             // }
+//
+//         }
         $(".body").delegate(".item","click",function() {
             window.location.href = "http://m.maibaoscratch.com/#production_detail/ff74b19d-f7da-4faf-a5fb-f96b9b11d964";
             // +$(this).find('.id').text();
