@@ -178,7 +178,9 @@ div.item .content .intro{
     left: 0px;
     width: 1.2rem;
 }
-
+#submit{
+	cursor: pointer;
+}
 
 @media (device-height:568px) and (-webkit-min-device-pixel-ratio:2){
 /* .time,.address{
@@ -275,7 +277,7 @@ input[type=checkbox] {
 	height: .5rem;
 	background: transparent;
 	top: 25%;
-	left: 25%;
+	left: 15%;
 	border: 3px solid #04BE02;
 	border-top: none;
 	border-right: none;

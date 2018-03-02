@@ -47,7 +47,7 @@ $(document).ready(function() {
             console.log(base);
             //麦宝
             for(var i=0;i<data.data.length;i++){
-                var img=data.data[i].img;
+                var img="http://www.maibaoscratch.com/files/"+data.data[i].img;
                 var name=data.data[i].name;
 
                     str += '<div class="c-table"><p>'+

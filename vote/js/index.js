@@ -30,8 +30,10 @@ $(function() {
     }
 //        getWeChatId(options,callbackA);
     init();
+    //获取活动名称，每天可投票次数等配置
     voteParamContact();
-    voteNumContact();
+    //利用openid，actid获取后台投票数量，由前端检验是否达到上限，后期可以获取openid后再添加
+    // voteNumContact();
     productInfoContact();
     function init() {
         if(getCookie("countff")!='null'&&getCookie("countff")!=null&&getCookie("countff")==0){
