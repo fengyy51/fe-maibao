@@ -176,7 +176,7 @@
         function makeList(list) {
             var strHtml = '';
             for (var i = 0; i < length; i++) {
-                strHtml+=showDetail(list[i],i+1);
+                strHtml+=showDetail(list[i],i);
             }
             $('#listWork .body').html(strHtml);
             $('.intro1').width(window.screen.width*0.83-120);
@@ -209,9 +209,15 @@
             if(description==null||description==''){
                 description='暂无介绍';
             }
-            strHtml+='<div class="tupian"> <img src="'+img+'"></div><div class="content">'+
-                '<div class="check"><input type="checkbox" value="' +id+'"id="product'+i+'" name="product'+i+'" style="zoom: 180%;"><label ></label></div>'+
-                '<div id="'+id+'"><b>编号:</b><span class="content-span id">'+id+'</div>';
+            if(i<8){
+                strHtml+='<div class="tupian"> <img data-original="'+img+'" src="'+img+'"></div><div class="content">'+
+                    '<div class="check"><input type="checkbox" value="' +id+'"id="product'+i+'" name="product'+i+'" style="zoom: 180%;"><label ></label></div>'+
+                    '<div id="'+id+'"><b>编号:</b><span class="content-span id">'+id+'</div>';
+            }else {
+                strHtml+='<div class="tupian"> <img data-original="'+img+'" src=""></div><div class="content">'+
+                    '<div class="check"><input type="checkbox" value="' +id+'"id="product'+i+'" name="product'+i+'" style="zoom: 180%;"><label ></label></div>'+
+                    '<div id="'+id+'"><b>编号:</b><span class="content-span id">'+id+'</div>';
+            }
             strHtml+='<div id="id" style="display: none;">'+id+'</div>'+
                 '<div id="proId" style="display: none;">'+proId+'</div>'+
                 '<div id="name"><b>名称：</b>'+'<span class="content-span">'+name+'</span></div>'+
