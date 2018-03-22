@@ -1,8 +1,8 @@
 urlServer="http://localhost:8085";  //线下
 // //
-// urlServer="http://wechatmaibaoscratch.com:8075";//麦宝
+// urlServer="http://tuopinpin.com:8075";//麦宝
 var APPIDall="wx8f0e8c6ecbd85ab8";//麦宝
-var urlYuming="http://maibaoscratch.com"; //麦宝测试
+var urlYuming="http://tuopinpin.com"; //麦宝测试
 // urlServer="http://120.27.227.32:8085";   //线上
 // var urlYuming="http://fbinwang.bw158.cn"; //线上
 // var APPIDall="wx1ce88e01dd6e9a77";//宾王

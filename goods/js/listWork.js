@@ -204,7 +204,7 @@
                 id=item.id,
                 name=item.name,
                 author=item.author,
-                img="http://www.maibaoscratch.com/files/"+item.img,
+                img="http://www.tuopinpin.com/files/"+item.img,
                 description=item.description;
             if(description==null||description==''){
                 description='暂无介绍';
@@ -298,6 +298,8 @@
                                             if(msg=='已投票'){
                                                 $('#submit').html("已投票");
                                                 voteflag=true;
+                                                countff--;
+                                                setCookie_timedetail("countff",countff,'24:00:00');
                                                 setTimeout(function(){
                                                     window.location.replace("../../vote/list.html?actId="+actId);
                                                 },1000);
@@ -406,7 +408,7 @@
 //         }
         $(".body").delegate(".item div.tupian","click",function() {
             // console.log($(this).parent().find('#proId').text());
-            window.location.href = "http://m.maibaoscratch.com/#production_detail/"+ $(this).parent().find('#proId').text();
+            window.location.href = "http://m.tuopinpin.com/#production_detail/"+ $(this).parent().find('#proId').text();
             // +$(this).find('.id').text();
             // window.location.href = "../page/dow.html?id=" + $(this).find('.id').text()+"&actId="+actId;
         });
