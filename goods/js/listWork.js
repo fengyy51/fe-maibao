@@ -5,7 +5,14 @@
         $('html').width(window.screen.width);
         $('html').css("overflow-x","hidden");
         var countff=getCookie("countff");//投票次数
-        // var openId="yy";
+        // 获取用户openid，用户授权
+        var openId='yy';
+        var options={
+            url:urlYuming+"/goods/page/listWork.html?id=18",
+            urlServerauth:urlServer+"/user/do-auth",
+            APPID:APPIDall
+        }
+
         var shareflagvote=getCookie("shareflagvote");//投票分享次数
 
         var num;//已抽奖次数后台返回
@@ -37,11 +44,127 @@
                 title: actName
             });
         });
+        $("#submit").bind("click", function () {
+            countff=getCookie("countff");
+            // alert(countff);
+            // alert(voteMaxNum);
+            if($('#submit').html()=='投票并查看结果'){
+                //后台限制投票次数
+                // if(num>=voteMaxNum){
+                //     weui.alert("投票次数已达上限");
+                //     $('#submit').attr("disabled",true);
+                //     setTimeout(function(){
+                //         window.location.href = "../../vote/list.html?actId="+actId;
+                //     },1000);
+                // }else
+                if (countff==0){
+                    weui.alert("投票次数已达上限");
+                    $('#submit').attr("disabled",true);
+                    setTimeout(function(){
+                        window.location.replace("../../vote/list.html?actId="+actId);
+                    },1000);
+                }
+                else{
+                    var num = 0;
+                    var str = "";
+                    var curTime=(new Date()).valueOf();
+                    for (var i = 1; i <= length; i++) {
+                        if ($("#product" + i).attr("checked") != null) {
+                            num++;
+                            str += $("#product" + i).val() + ",";
+                        }
+                    }
+                    console.log(str);
+                    str=str+'@@@'+curTime;
+                    //后台限制投票次数
+                    console.log(openId);
+                    str=str+'@@@'+openId;
+                    console.log(str);
+                    // alert(num);
+                    // alert(proNum);
+                    if (num == proNum) {
+                        // str = str.substring(0, str.length - 1);
+                        console.log(str);
+                        var voteflag=false;
+                        $('#submit').attr("disabled",true);
+                        if(voteflag==false){
+                            $.ajax({
+                                url: urlServer + "/vote/post-vote-number-info",
+                                type: "POST",
+                                data: {
+                                    "str": str,
+                                    "actId":actId,
+                                },
+                                success: function(data) {
+                                    //后台控制投票次数，返回是否可以投票
+                                    var code=data.code;
+                                    console.log(data);
+                                    // alert(data);
+                                    if(code==200){
+                                        var result = data.data.result;
+                                        if (result == true) {
+                                            --countff;
+                                            console.log(countff);
+                                            setCookie_timedetail("countff", countff, '24:00:00');
+                                            $('#submit').html("已投票");
+                                            voteflag=true;
+                                            setTimeout(function(){
+                                                window.location.replace("../../vote/list.html?actId="+actId);
+                                            },1000);
+                                        } else if (result == false) {
+                                            voteflag=false;
+                                            var msg=data.data.msg;
+                                            if(msg=='已投票'){
+                                                $('#submit').html("已投票");
+                                                voteflag=true;
+                                                countff--;
+                                                setCookie_timedetail("countff",countff,'24:00:00');
+                                                setTimeout(function(){
+                                                    window.location.replace("../../vote/list.html?actId="+actId);
+                                                },1000);
+                                            }else {
+                                                weui.alert(msg);
+                                                $('#submit').html("投票并查看结果");
+                                                $('#submit').removeAttr("disabled");
+                                            }
+                                        }
+                                    }else{
+                                        weui.alert("投票失败");
+                                        $('#submit').html("投票并查看结果");
+                                        $('#submit').removeAttr("disabled");
+                                    }
+
+                                },
+                                error: function(error) {
+                                    console.log(error);
+                                    weui.alert(error);
+                                    voteflag=false;
+                                    $('#submit').removeAttr("disabled");
+                                    weui.alert("投票未成功，再来一次哟！");
+                                }
+                            });
+                        }
+
+                    } else {
+                        weui.alert("您已选择"+num+"个，"+"请选择"+proNum+"个作品哟！");
+                    }
+
+                }
+            }
+
+        });
+        function callbackA(id) {
+            openId=id;
+            voteNumContact();
+            voteParamContact();
+            productInfoContact();
+        }
+        getWeChatId(options,callbackA);
         //获取活动名称，每天可投票次数等配置,投票时间限制管理
-        voteParamContact();
+
         //利用openid，actid获取后台投票数量，由前端检验是否达到上限，后期可以获取openid后再添加
         // voteNumContact();
-        productInfoContact();
+
         function voteNumContact() {
             $.ajax({
                 url:urlServer+urlGetVoteNum,
@@ -226,114 +349,7 @@
             strHtml+='</div></div></div>';
             return strHtml;
         }
-        $("#submit").bind("click", function () {
-            countff=getCookie("countff");
-                // alert(countff);
-                // alert(voteMaxNum);
-            if($('#submit').html()=='投票并查看结果'){
-                //后台限制投票次数
-                // if(num>=voteMaxNum){
-                //     weui.alert("投票次数已达上限");
-                //     $('#submit').attr("disabled",true);
-                //     setTimeout(function(){
-                //         window.location.href = "../../vote/list.html?actId="+actId;
-                //     },1000);
-                // }else
-                if (countff==0){
-                    weui.alert("投票次数已达上限");
-                    $('#submit').attr("disabled",true);
-                    setTimeout(function(){
-                        window.location.replace("../../vote/list.html?actId="+actId);
-                    },1000);
-                }
-                else{
-                    var num = 0;
-                    var str = "";
-                    var curTime=(new Date()).valueOf();
-                    for (var i = 1; i <= length; i++) {
-                        if ($("#product" + i).attr("checked") != null) {
-                            num++;
-                            str += $("#product" + i).val() + ",";
-                        }
-                    }
-                    console.log(str);
-                    str=str+'@@@'+curTime;
-                    //后台限制投票次数
-                    // str=str+'@@@'+openId;
-                    console.log(str);
-                    // alert(num);
-                    // alert(proNum);
-                    if (num == proNum) {
-                        // str = str.substring(0, str.length - 1);
-                        console.log(str);
-                        var voteflag=false;
-                        $('#submit').attr("disabled",true);
-                        if(voteflag==false){
-                            $.ajax({
-                                url: urlServer + "/vote/post-vote-number-info",
-                                type: "POST",
-                                data: {
-                                    "str": str,
-                                    "actId":actId,
-                                },
-                                success: function(data) {
-                                    //后台控制投票次数，返回是否可以投票
-                                    var code=data.code;
-                                    console.log(data);
-                                    // alert(data);
-                                    if(code==200){
-                                        var result = data.data.result;
-                                        if (result == true) {
-                                            --countff;
-                                            console.log(countff);
-                                            setCookie_timedetail("countff", countff, '24:00:00');
-                                            $('#submit').html("已投票");
-                                            voteflag=true;
-                                            setTimeout(function(){
-                                                window.location.replace("../../vote/list.html?actId="+actId);
-                                            },1000);
-                                        } else if (result == false) {
-                                            voteflag=false;
-                                            var msg=data.data.msg;
-                                            if(msg=='已投票'){
-                                                $('#submit').html("已投票");
-                                                voteflag=true;
-                                                countff--;
-                                                setCookie_timedetail("countff",countff,'24:00:00');
-                                                setTimeout(function(){
-                                                    window.location.replace("../../vote/list.html?actId="+actId);
-                                                },1000);
-                                            }else {
-                                                weui.alert(msg);
-                                                $('#submit').html("投票并查看结果");
-                                                $('#submit').removeAttr("disabled");
-                                            }
-                                        }
-                                    }else{
-                                        weui.alert("投票失败");
-                                        $('#submit').html("投票并查看结果");
-                                        $('#submit').removeAttr("disabled");
-                                    }
 
-                                },
-                                error: function(error) {
-                                    console.log(error);
-                                    weui.alert(error);
-                                    voteflag=false;
-                                    $('#submit').removeAttr("disabled");
-                                    weui.alert("投票未成功，再来一次哟！");
-                                }
-                            });
-                        }
-
-                    } else {
-                        weui.alert("您已选择"+num+"个，"+"请选择"+proNum+"个作品哟！");
-                    }
-
-                }
-            }
-
-        });
 
 //麦宝修改
 //一
