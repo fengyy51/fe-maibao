@@ -44,6 +44,14 @@
                 title: actName
             });
         });
+
+        function callbackA(id) {
+            openId=id;
+            voteNumContact();
+            voteParamContact();
+            productInfoContact();
+        }
+        getWeChatId(options,callbackA);
         $("#submit").bind("click", function () {
             countff=getCookie("countff");
             // alert(countff);
@@ -68,7 +76,7 @@
                     var num = 0;
                     var str = "";
                     var curTime=(new Date()).valueOf();
-                    for (var i = 1; i <= length; i++) {
+                    for (var i =0; i < length; i++) {
                         if ($("#product" + i).attr("checked") != null) {
                             num++;
                             str += $("#product" + i).val() + ",";
@@ -80,6 +88,7 @@
                     console.log(openId);
                     str=str+'@@@'+openId;
                     console.log(str);
+                    console.log(num);
                     // alert(num);
                     // alert(proNum);
                     if (num == proNum) {
@@ -153,13 +162,6 @@
             }
 
         });
-        function callbackA(id) {
-            openId=id;
-            voteNumContact();
-            voteParamContact();
-            productInfoContact();
-        }
-        getWeChatId(options,callbackA);
         //获取活动名称，每天可投票次数等配置,投票时间限制管理
 
         //利用openid，actid获取后台投票数量，由前端检验是否达到上限，后期可以获取openid后再添加
