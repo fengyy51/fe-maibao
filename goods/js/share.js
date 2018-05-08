@@ -148,6 +148,7 @@ $(function(){
                         setCookie_timedetail("shareflagvote",shareflagvote,'24:00:00');
                         setCookie_timedetail("shareflagprize",shareflagprize,'24:00:00');
                         setCookie_timedetail("countff",countff,'24:00:00');
+                        location.reload();
                         // var voteflag=getCookie("voteflag");
                         // shareflagvote=getCookie("shareflagvote");
                         // countff=getCookie("countff");
