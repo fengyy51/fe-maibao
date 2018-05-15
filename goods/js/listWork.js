@@ -1,5 +1,6 @@
     $(document).ready(function() {
         var urlVoteParam="/vote/get-vote-param";
+        var urlGetVoteIndex="/vote/get-vote-index";//获取投票活动真正的序号，而非关联活动的序号
         var urlProductInfo="/vote/get-vote-product-info";
         var urlGetVoteNum='/vote/get-vote-num';
         $('html').width(window.screen.width);
@@ -7,11 +8,11 @@
         var countff=getCookie("countff");//投票次数
         // 获取用户openid，用户授权
         var openId='yy';
-        var options={
-            url:urlYuming+"/goods/page/listWork.html?id=18",
-            urlServerauth:urlServer+"/user/do-auth",
-            APPID:APPIDall
-        }
+        // var options={
+        //     url:urlYuming+"/goods/page/listWork.html?id=18",
+        //     urlServerauth:urlServer+"/user/do-auth",
+        //     APPID:APPIDall
+        // }
 
         var shareflagvote=getCookie("shareflagvote");//投票分享次数
 
@@ -35,6 +36,8 @@
             $searchClear = $('#searchClear'),
             $searchCancel = $('#searchCancel');
         var actId=getQueryString("id");
+        var voteIndex;//获取的投票活动真正序号
+        var contentlen=0;//投票内容项的数量
 
         //投票规则
         document.querySelector('#fixedlogo').addEventListener('click', function () {
@@ -45,13 +48,16 @@
             });
         });
 
-        function callbackA(id) {
-            openId=id;
-            voteNumContact();
-            voteParamContact();
-            productInfoContact();
-        }
-        getWeChatId(options,callbackA);
+        // function callbackA(id) {
+        //     openId=id;
+        //     voteNumContact();
+        //     voteParamContact();
+        //     productInfoContact();
+        // }
+        getVoteIndex();
+        voteParamContact();
+
+        // getWeChatId(options,callbackA);
         $("#submit").bind("click", function () {
             countff=getCookie("countff");
             // alert(countff);
@@ -193,7 +199,25 @@
                 }
             })
         }
-
+        function getVoteIndex() {
+            $.ajax({
+                url:urlServer+urlGetVoteIndex,
+                data:{
+                    "actId":actId
+                },
+                async:false,
+                success:function (data) {
+                    if(data.code==200){
+                        voteIndex=data.data;
+                        productInfoContact(voteIndex);
+                    }
+                },
+                error:function (error) {
+                    console.log(error);
+                    alert("获取投票活动真正序号失败");
+                }
+            })
+        }
         function voteParamContact() {
             $.ajax({
                 url:urlServer+urlVoteParam,
@@ -267,11 +291,11 @@
                 }
             })
         }
-        function productInfoContact() {
+        function productInfoContact(voteIndex) {
             $.ajax({
                 url: urlServer+urlProductInfo,
                 data:{
-                    "actId":actId
+                    "actId":voteIndex
                 },
                 success: function(data) {
                     var list = data.data;
@@ -309,45 +333,86 @@
             $('#text').width(wwidth*0.46);
             $('#button1 a').width(wwidth*0.16);
             $('#button2 a').width(wwidth*0.16);
-            $('div.item').height(wwidth*0.4*0.75);
+             // var size=parseInt($('div.item .content').height()/6);
+            var size=wwidth / 23 + 'px';
+             console.log(size);
+            $('div.item .content').css('line-height',wwidth/23+2+'px');
+            $('div.item .content').css('font-size',size+'!important');
+            var font=$('div.item .content').css("font-size");
+            // var font=window.getComputedStyle(document.getElementsByClassName("content-span")[0]).lineHeight;
+
+            console.log(font);
+            var contentheight=font.slice(0,font.length-2)*(contentlen+1)*1.2;
+
+            if(contentheight<wwidth*0.4*0.75){
+                $('div.item').height(wwidth*0.4*0.75);
+                $('div.item .content').height(wwidth*0.4*0.75);
+            }else {
+                $('div.item').height(contentheight+"px");
+                $('div.item .content').height(contentheight+"px");
+                console.log($('div.item .content').height());
+            }
+            // $('div.item').height(wwidth*0.4*0.75);
             $('div.item .tupian').width(wwidth*0.4);
             $('div.item .tupian').height(wwidth*0.4*0.75);
             $('.tupian img').width(wwidth*0.4);
             $('.tupian img').height(wwidth*0.4*0.75);
             //动态修改content文字大小，行高
-            $('div.item .content').height(wwidth*0.4*0.75);
+            // $('div.item .content').height(wwidth*0.4*0.75);
             // console.log(j);
             // console.log($('div.item .content').height());
-            var size=parseInt($('div.item .content').height()/6);
-            // console.log(size);
-            $('div.item .content div').css('line-height',size+'px');
-            $('div.item .content div').css('font-size',(size-5)+'px');
+            //
         }
         function showDetail(item,i) {
             var strHtml='<div class="item">';
-            var proId=item.proId,
-                id=item.id,
-                name=item.name,
-                author=item.author,
-                img="http://www.tuopinpin.com/files/"+item.img,
-                description=item.description;
-            if(description==null||description==''){
-                description='暂无介绍';
+            var id=item.id,
+                img=item.imgUrl.slice(1,item.imgUrl.length-1),
+                content=item.content.split("&&&");
+            console.log(img);
+            // var proId=item.proId,
+            //     id=item.id,
+            //     name=item.name,
+            //     author=item.author,
+            //     // img="http://www.tuopinpin.com/files/"+item.img,
+            //     description=item.description;
+            var somestr="";
+            contentlen=Math.max(contentlen,content.length);
+
+            for(var i=0;i<content.length;i++){
+
+                    console.log(content[i]);
+                    var keyArr=[];
+                    if(content[i].indexOf(":")>0){
+                        keyArr=content[i].split(":");
+                    }else  if(content[i].indexOf("：")>0){
+                        keyArr=content[i].split("：");
+                    }
+                    somestr+='<div class="item_content"><b>'+keyArr[0]+'：</b>'+'<span class="content-span">'+keyArr[1]+'</span></div>';
+
+
             }
+            console.log(somestr);
+            // if(description==null||description==''){
+            //     description='暂无介绍';
+            // }
             if(i<8){
-                strHtml+='<div class="tupian"> <img data-original="'+img+'" src="'+img+'"></div><div class="content">'+
+                strHtml+='<div class="tupian"> <img data-original='+img+' src='+img+'></div><div class="content">'+
                     '<div class="check"><input type="checkbox" value="' +id+'"id="product'+i+'" name="product'+i+'" style="zoom: 180%;"><label ></label></div>'+
-                    '<div id="'+id+'"><b>编号:</b><span class="content-span id">'+id+'</div>';
+                    '<div id="'+id+'" class="item_content"><b>编号:</b><span class="content-span ">'+id+'</span></div>';
             }else {
-                strHtml+='<div class="tupian"> <img data-original="'+img+'" src=""></div><div class="content">'+
+                strHtml+='<div class="tupian"> <img data-original='+img+' src=""></div><div class="content">'+
                     '<div class="check"><input type="checkbox" value="' +id+'"id="product'+i+'" name="product'+i+'" style="zoom: 180%;"><label ></label></div>'+
-                    '<div id="'+id+'"><b>编号:</b><span class="content-span id">'+id+'</div>';
+                    '<div id="'+id+'" class="item_content"><b>编号:</b><span class="content-span ">'+id+'</div>';
             }
-            strHtml+='<div id="id" style="display: none;">'+id+'</div>'+
-                '<div id="proId" style="display: none;">'+proId+'</div>'+
-                '<div id="name"><b>名称：</b>'+'<span class="content-span">'+name+'</span></div>'+
-                '<div id="author"><b>作者：</b>'+'<span class="content-span">'+author+'</span></div>'+
-                '<div id="description"><b>介绍：</b>'+'<span class="content-span">'+description+'</span></div>';
+            strHtml+=somestr;
+                // '<div id="name"><b>名称：</b>'+'<span class="content-span">'+name+'</span></div>'+
+                // '<div id="author"><b>作者：</b>'+'<span class="content-span">'+author+'</span></div>'+
+                // '<div id="description"><b>介绍：</b>'+'<span class="content-span">'+description+'</span></div>';
+            // strHtml+='<div id="id" style="display: none;">'+id+'</div>'+
+            //     '<div id="proId" style="display: none;">'+proId+'</div>'+
+            //     '<div id="name"><b>名称：</b>'+'<span class="content-span">'+name+'</span></div>'+
+            //     '<div id="author"><b>作者：</b>'+'<span class="content-span">'+author+'</span></div>'+
+            //     '<div id="description"><b>介绍：</b>'+'<span class="content-span">'+description+'</span></div>';
             strHtml+='</div></div></div>';
             return strHtml;
         }
