@@ -6,14 +6,17 @@
         $('html').width(window.screen.width);
         $('html').css("overflow-x","hidden");
         var countff=getCookie("countff");//投票次数
+        var countsharecircle=getCookie("countsharecircle");//获取分享朋友圈的次数
+        var countsharefriend=getCookie("countsharefriend");//获取分享朋友的次数
+
         // 获取用户openid，用户授权
         var openId='yy';
-        // var options={
-        //     url:urlYuming+"/goods/page/listWork.html?id=18",
-        //     urlServerauth:urlServer+"/user/do-auth",
-        //     APPID:APPIDall
-        // }
-
+        var id=getQueryString("id");
+        var options={
+            url:urlYuming+"/goods/page/listWork.html?id="+id,
+            urlServerauth:urlServer+"/user/do-auth",
+            APPID:APPIDall
+        }
         var shareflagvote=getCookie("shareflagvote");//投票分享次数
 
         var num;//已抽奖次数后台返回
@@ -48,18 +51,19 @@
             });
         });
 
-        // function callbackA(id) {
-        //     openId=id;
-        //     voteNumContact();
-        //     voteParamContact();
-        //     productInfoContact();
-        // }
-        getVoteIndex();
-        voteParamContact();
+        function callbackA(id) {
+            openId=id;
+            getVoteIndex();
+            voteNumContact();
+            voteParamContact();
+        }
+        // getVoteIndex();
+        // voteParamContact();
 
-        // getWeChatId(options,callbackA);
+        getWeChatId(options,callbackA);
         $("#submit").bind("click", function () {
             countff=getCookie("countff");
+
             // alert(countff);
             // alert(voteMaxNum);
             if($('#submit').html()=='投票并查看结果'){
@@ -88,15 +92,14 @@
                             str += $("#product" + i).val() + ",";
                         }
                     }
-                    console.log(str);
                     str=str+'@@@'+curTime;
                     //后台限制投票次数
                     console.log(openId);
                     str=str+'@@@'+openId;
+                    console.log(countsharecircle);
+                    console.log(countsharefriend);
+                    str+='@@@'+countsharefriend+'@@@'+countsharecircle;
                     console.log(str);
-                    console.log(num);
-                    // alert(num);
-                    // alert(proNum);
                     if (num == proNum) {
                         // str = str.substring(0, str.length - 1);
                         console.log(str);
@@ -121,6 +124,8 @@
                                             --countff;
                                             console.log(countff);
                                             setCookie_timedetail("countff", countff, '24:00:00');
+                                            setCookie_29("countsharefriend",0);
+                                            setCookie_29("countsharecircle",0);
                                             $('#submit').html("已投票");
                                             voteflag=true;
                                             setTimeout(function(){

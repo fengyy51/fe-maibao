@@ -20,6 +20,14 @@ $(function(){
     var proApproved;//抽奖配置 proNum一次投多少个
 
     var actId=getQueryString("id");
+    if(!getCookie("countsharecircle")){
+        setCookie_29("countsharecircle",0);
+    }
+    var countsharecircle=getCookie("countsharecircle");//记录分享朋友圈的次数
+    if(!getCookie("countsharefriend")){
+        setCookie_29("countsharefriend",0);
+    }
+    var countsharefriend=getCookie("countsharefriend");//记录分享朋友的次数
     voteParamContact();
     function voteParamContact() {
         $.ajax({
@@ -104,6 +112,9 @@ $(function(){
                                 shareflagvote++;
                             }
                         }
+                        //增加分享朋友圈次数
+                        ++countsharecircle;
+                        setCookie_timedetail("countsharecircle",countsharecircle,"24:00:00");
                         // if(shareflagprize<3&&countprize<3){
                         //     countprize++;
                         //     shareflagprize++;
@@ -131,6 +142,7 @@ $(function(){
                     dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
                     success: function () {
                         // 用户确认分享后执行的回调函数
+
                         alert('分享成功');
                         var prizeflag=getCookie("prizeflag");
                         var shareflagvote=getCookie("shareflagvote");
@@ -144,11 +156,14 @@ $(function(){
                                 shareflagvote++;
                             }
                         }
+                        //增加分享朋友次数
+                        ++countsharefriend;
+                        setCookie_timedetail("countsharefriend",countsharefriend,"24:00:00");
                         setCookie_timedetail("countprize",countprize,'24:00:00');
                         setCookie_timedetail("shareflagvote",shareflagvote,'24:00:00');
                         setCookie_timedetail("shareflagprize",shareflagprize,'24:00:00');
                         setCookie_timedetail("countff",countff,'24:00:00');
-                        location.reload();
+
                         // var voteflag=getCookie("voteflag");
                         // shareflagvote=getCookie("shareflagvote");
                         // countff=getCookie("countff");
