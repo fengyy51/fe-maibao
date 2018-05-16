@@ -52,7 +52,7 @@ div.content{
     border-top: 0.2rem solid #FAF1F1;
 
 }
-div.content div b{
+div.content div {
     font-size: 1.1rem;
     color:#04BE02;
     padding:1% 0;

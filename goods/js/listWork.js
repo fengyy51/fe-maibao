@@ -6,8 +6,17 @@
         $('html').width(window.screen.width);
         $('html').css("overflow-x","hidden");
         var countff=getCookie("countff");//投票次数
-        var countsharecircle=getCookie("countsharecircle");//获取分享朋友圈的次数
-        var countsharefriend=getCookie("countsharefriend");//获取分享朋友的次数
+        var countsharecircle,countsharefriend;
+        if(getCookie("countsharecircle")!=null||getCookie("countsharecircle")!='null'||getCookie("countsharecircle")){
+            countsharecircle=getCookie("countsharecircle");//获取分享朋友圈的次数
+        }else {
+            countsharecircle=0;
+        }
+        if(getCookie("countsharefriend")!=null||getCookie("countsharefriend")!='null'||getCookie("countsharefriend")){
+            countsharefriend=getCookie("countsharefriend");//获取分享朋友的次数
+        }else {
+            countsharefriend=0;
+        }
 
         // 获取用户openid，用户授权
         var openId='yy';
@@ -50,13 +59,15 @@
                 title: actName
             });
         });
-
+        //
         function callbackA(id) {
             openId=id;
             getVoteIndex();
+            //利用openid，actid获取后台投票数量，由前端检验是否达到上限，后期可以获取openid后再添加
             voteNumContact();
             voteParamContact();
         }
+        //线下
         // getVoteIndex();
         // voteParamContact();
 
@@ -86,12 +97,20 @@
                     var num = 0;
                     var str = "";
                     var curTime=(new Date()).valueOf();
-                    for (var i =0; i < length; i++) {
-                        if ($("#product" + i).attr("checked") != null) {
+                    var checkboxArr=document.querySelectorAll('input[type="checkbox"]');
+                    for(var k in checkboxArr){
+                        if(checkboxArr[k].checked){
                             num++;
-                            str += $("#product" + i).val() + ",";
+                            str+=checkboxArr[k].value;
                         }
                     }
+                    console.log(str);
+                    // for (var i =0; i < length; i++) {
+                    //     if ($("#product" + i).attr("checked") != null) {
+                    //         num++;
+                    //         str += $("#product" + i).val() + ",";
+                    //     }
+                    // }
                     str=str+'@@@'+curTime;
                     //后台限制投票次数
                     console.log(openId);
@@ -175,8 +194,7 @@
         });
         //获取活动名称，每天可投票次数等配置,投票时间限制管理
 
-        //利用openid，actid获取后台投票数量，由前端检验是否达到上限，后期可以获取openid后再添加
-        // voteNumContact();
+
 
         function voteNumContact() {
             $.ajax({
@@ -339,7 +357,7 @@
             $('#button1 a').width(wwidth*0.16);
             $('#button2 a').width(wwidth*0.16);
              // var size=parseInt($('div.item .content').height()/6);
-            var size=wwidth / 23 + 'px';
+            var size=wwidth / 25 + 'px';
              console.log(size);
             $('div.item .content').css('line-height',wwidth/23+2+'px');
             $('div.item .content').css('font-size',size+'!important');
@@ -403,11 +421,11 @@
             if(i<8){
                 strHtml+='<div class="tupian"> <img data-original='+img+' src='+img+'></div><div class="content">'+
                     '<div class="check"><input type="checkbox" value="' +id+'"id="product'+i+'" name="product'+i+'" style="zoom: 180%;"><label ></label></div>'+
-                    '<div id="'+id+'" class="item_content"><b>编号:</b><span class="content-span ">'+id+'</span></div>';
+                    '<div id="'+id+'" class="item_conten id"><b>编号:</b><span class="content-span ">'+id+'</span></div>';
             }else {
                 strHtml+='<div class="tupian"> <img data-original='+img+' src=""></div><div class="content">'+
                     '<div class="check"><input type="checkbox" value="' +id+'"id="product'+i+'" name="product'+i+'" style="zoom: 180%;"><label ></label></div>'+
-                    '<div id="'+id+'" class="item_content"><b>编号:</b><span class="content-span ">'+id+'</div>';
+                    '<div id="'+id+'" class="item_content id"><b>编号:</b><span class="content-span ">'+id+'</div>';
             }
             strHtml+=somestr;
                 // '<div id="name"><b>名称：</b>'+'<span class="content-span">'+name+'</span></div>'+
@@ -496,9 +514,9 @@
 //         }
         $(".body").delegate(".item div.tupian","click",function() {
             // console.log($(this).parent().find('#proId').text());
-            window.location.href = "http://m.tuopinpin.com/#production_detail/"+ $(this).parent().find('#proId').text();
+            // window.location.href = "http://m.tuopinpin.com/#production_detail/"+ $(this).parent().find('#proId').text();
             // +$(this).find('.id').text();
-            // window.location.href = "../page/dow.html?id=" + $(this).find('.id').text()+"&actId="+actId;
+            window.location.href = "../page/dow.html?id=" + $(this).parent().find('.id span').text()+"&actId="+voteIndex;
         });
         var now=Date.now();
 

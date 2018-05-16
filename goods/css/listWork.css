@@ -213,7 +213,12 @@ a {
 	font-size: 1.2rem;
 	overflow: hidden;
 }
-
+.item_content{
+	width: 95%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
 /*.content {*/
 	/*margin: 0 3% 20% 3%;*/
 /*}*/

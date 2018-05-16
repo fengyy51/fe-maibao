@@ -47,12 +47,14 @@ $(document).ready(function() {
             console.log(base);
             //麦宝
             for(var i=0;i<data.data.length;i++){
-                var img="http://www.tuopinpin.com/files/"+data.data[i].img;
+                // var img="http://www.tuopinpin.com/files/"+data.data[i].img;
+                var img=data.data[i].img.slice(1,data.data[i].img.length-1);
+                console.log(img);
                 var name=data.data[i].name;
 
                     str += '<div class="c-table"><p>'+
                         // '<span>'+name+'</span>'+
-                        '<img class="c-tablepic-list" src="' + img + '">'+
+                        '<img class="c-tablepic-list" src=' + img + '>'+
                         '<span style=" padding-top:2%;font-size: 1rem;padding-right:3%;width:8%;">' +
                         data.data[i].itemId +
                         '</span>' +
