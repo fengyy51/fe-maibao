@@ -214,7 +214,7 @@ a {
 	overflow: hidden;
 }
 .item_content{
-	width: 95%;
+	width: 90%;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;

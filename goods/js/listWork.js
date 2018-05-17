@@ -143,8 +143,8 @@
                                             --countff;
                                             console.log(countff);
                                             setCookie_timedetail("countff", countff, '24:00:00');
-                                            setCookie_29("countsharefriend",0);
-                                            setCookie_29("countsharecircle",0);
+                                            // setCookie_29("countsharefriend",0);
+                                            // setCookie_29("countsharecircle",0);
                                             $('#submit').html("已投票");
                                             voteflag=true;
                                             setTimeout(function(){

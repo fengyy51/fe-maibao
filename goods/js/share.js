@@ -160,7 +160,7 @@ $(function(){
                             }
                         }
                         //增加分享朋友圈次数
-                        countsharefriend=getCookie("countsharefriend");//记录分享朋友圈的次数
+                        countsharefriend=getCookie("countsharefriend");//记录分享朋友的次数
                         if(countsharefriend!=null||countsharefriend!="null"){
                             ++countsharefriend;
                             setCookie_timedetail("countsharefriend",countsharefriend,"24:00:00");
