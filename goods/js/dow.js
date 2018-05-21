@@ -37,11 +37,15 @@ $(document).ready(function() {
         if(obj.id){
             var str1='<div class="content"><div id='+obj.id+'><b>编号</b>:<span class="content-span id">'+obj.id+'</div>';
             var content=obj.content;
-            var item=content.split("&&&");
-            for(var j=0;j<item.length;j++){
-                var seperator=content.indexOf(":")>0?":":"：";
-                var detail=item[j].split(seperator);
-                str1+='<div id="'+detail[0]+'"><b>'+detail[0]+'</b>:'+'<span class="content-span">'+detail[1]+'</span></div>';
+            console.log(content);
+            if(content.trim()!="") {
+                // alert("s");
+                var item = content.split("&&&");
+                for (var j = 0; j < item.length; j++) {
+                    var seperator = content.indexOf(":") > 0 ? ":" : "：";
+                    var detail = item[j].split(seperator);
+                    str1 += '<div id="' + detail[0] + '"><b>' + detail[0] + '</b>:' + '<span class="content-span">' + detail[1] + '</span></div>';
+                }
             }
             var img=obj.imgUrl.slice(1,obj.imgUrl.length-1);
             console.log(img);

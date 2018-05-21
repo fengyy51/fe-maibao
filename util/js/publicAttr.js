@@ -1,6 +1,6 @@
-// urlServer="http://localhost:8085";  //线下
+urlServer="http://localhost:8085";  //线下
 // //
-urlServer="http://tuopinpin.com:8075";//零拓
+// urlServer="http://tuopinpin.com:8075";//零拓
 var APPIDall="wxbeba497bd5c42c0e";//零拓
 var urlYuming="http://wechat.tuopinpin.com"; //零拓测试
 // urlServer="http://120.27.227.32:8085";   //线上

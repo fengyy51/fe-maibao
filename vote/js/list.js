@@ -5,8 +5,31 @@ $(document).ready(function() {
     // {
     //  $('#go').css("display",'none');
     // }
+    var urlVoteParam="/vote/get-vote-param";
     var actName=getCookie("actName");
     var actId=getQueryString("actId");
+    voteParamContact();
+    function voteParamContact() {
+        $.ajax({
+            url:urlServer+urlVoteParam,
+            async:false,
+            data:{
+                "actId":actId
+            },
+            success:function (data) {
+                var code=data.code;
+                if(code==200){
+                    actName=data.data.actName;
+                    $('#title').html(actName);
+
+                }
+            },
+            error:function (error) {
+                console.log(error);
+                weui.alert("获取投票设置失败");
+            }
+        })
+    }
     $('.title').html(actName);
     $('#vote').click(function () {
         window.location.href="../goods/page/listWork.html?id="+actId;

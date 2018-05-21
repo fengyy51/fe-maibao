@@ -7,12 +7,12 @@
         $('html').css("overflow-x","hidden");
         var countff=getCookie("countff");//投票次数
         var countsharecircle,countsharefriend;
-        if(getCookie("countsharecircle")!=null||getCookie("countsharecircle")!='null'||getCookie("countsharecircle")){
+        if(getCookie("countsharecircle")!=null&&getCookie("countsharecircle")!='null'&&getCookie("countsharecircle")){
             countsharecircle=getCookie("countsharecircle");//获取分享朋友圈的次数
         }else {
             countsharecircle=0;
         }
-        if(getCookie("countsharefriend")!=null||getCookie("countsharefriend")!='null'||getCookie("countsharefriend")){
+        if(getCookie("countsharefriend")!=null&&getCookie("countsharefriend")!='null'&&getCookie("countsharefriend")){
             countsharefriend=getCookie("countsharefriend");//获取分享朋友的次数
         }else {
             countsharefriend=0;
@@ -21,11 +21,19 @@
         // 获取用户openid，用户授权
         var openId='yy';
         var id=getQueryString("id");
-        var options={
-            url:urlYuming+"/goods/page/listWork.html?id="+id,
-            urlServerauth:urlServer+"/user/do-auth",
-            APPID:APPIDall
+        if(id){
+            setCookie_29("id",id);
         }
+        if(getCookie("id")!=null&&getCookie("id")){
+           id=getCookie("id");
+        }else {
+            id=18;
+        }
+        // var options={
+        //     url:urlYuming+"/goods/page/listWork.html?id="+id,
+        //     urlServerauth:urlServer+"/user/do-auth",
+        //     APPID:APPIDall
+        // }
         var shareflagvote=getCookie("shareflagvote");//投票分享次数
 
         var num;//已抽奖次数后台返回
@@ -48,6 +56,8 @@
             $searchClear = $('#searchClear'),
             $searchCancel = $('#searchCancel');
         var actId=getQueryString("id");
+
+
         var voteIndex;//获取的投票活动真正序号
         var contentlen=0;//投票内容项的数量
 
@@ -60,18 +70,18 @@
             });
         });
         //
-        function callbackA(id) {
-            openId=id;
-            getVoteIndex();
-            //利用openid，actid获取后台投票数量，由前端检验是否达到上限，后期可以获取openid后再添加
-            voteNumContact();
-            voteParamContact();
-        }
+        // function callbackA(id) {
+        //     openId=id;
+        //     getVoteIndex();
+        //     //利用openid，actid获取后台投票数量，由前端检验是否达到上限，后期可以获取openid后再添加
+        //     voteNumContact();
+        //     voteParamContact();
+        // }
         //线下
-        // getVoteIndex();
-        // voteParamContact();
+        getVoteIndex();
+        voteParamContact();
 
-        getWeChatId(options,callbackA);
+        // getWeChatId(options,callbackA);
         $("#submit").bind("click", function () {
             countff=getCookie("countff");
 
@@ -101,7 +111,7 @@
                     for(var k in checkboxArr){
                         if(checkboxArr[k].checked){
                             num++;
-                            str+=checkboxArr[k].value;
+                            str+=checkboxArr[k].value+ ",";
                         }
                     }
                     console.log(str);
@@ -119,7 +129,7 @@
                     console.log(countsharefriend);
                     str+='@@@'+countsharefriend+'@@@'+countsharecircle;
                     console.log(str);
-                    if (num == proNum) {
+                    if (num <= proNum) {
                         // str = str.substring(0, str.length - 1);
                         console.log(str);
                         var voteflag=false;
@@ -185,7 +195,7 @@
                         }
 
                     } else {
-                        weui.alert("您已选择"+num+"个，"+"请选择"+proNum+"个作品哟！");
+                        weui.alert("您已选择"+num+"个，"+"请最多选择"+proNum+"个作品哟！");
                     }
 
                 }
@@ -212,7 +222,7 @@
                             var votecount=num-voteMaxNum;
                             $('#submit').html('已达投票上限');
                             $('#submit').attr("disabled",true);
-                            $('.c-join').html('请投票（选择'+proNum+'个，投票'+votecount+'次）');
+                            $('.c-join').html('请投票（最多选择'+proNum+'个，投票'+votecount+'次）');
                         }
                     }
                 },
@@ -304,7 +314,7 @@
                         }
                         countff = getCookie("countff");
                         // weui.alert("您可投票" + countff + "次");
-                        $('.c-join').html('请投票（选择'+proNum+'个，投票'+countff+'次）');
+                        $('.c-join').html('请投票（最多选择'+proNum+'个，投票'+countff+'次）');
 
                     }
                 },
@@ -389,42 +399,48 @@
         function showDetail(item,i) {
             var strHtml='<div class="item">';
             var id=item.id,
-                img=item.imgUrl.slice(1,item.imgUrl.length-1),
+                img=item.imgUrl.slice(1,item.imgUrl.length-1);
+            var somestr="";
+            if(item.content.trim()!=""){
                 content=item.content.split("&&&");
-            console.log(img);
+                contentlen=Math.max(contentlen,content.length);
+                for(var i=0;i<content.length;i++){
+                    console.log(content[i]);
+                    if(content[i].trim()!=""){
+                        var keyArr=[];
+                        if(content[i].indexOf(":")>0){
+                            keyArr=content[i].split(":");
+                        }else  if(content[i].indexOf("：")>0){
+                            keyArr=content[i].split("：");
+                        }
+                        somestr+='<div class="item_content"><b>'+keyArr[0]+'：</b>'+'<span class="content-span">'+keyArr[1]+'</span></div>';
+
+                    }
+
+
+                }
+            }
+
             // var proId=item.proId,
             //     id=item.id,
             //     name=item.name,
             //     author=item.author,
             //     // img="http://www.tuopinpin.com/files/"+item.img,
             //     description=item.description;
-            var somestr="";
-            contentlen=Math.max(contentlen,content.length);
-
-            for(var i=0;i<content.length;i++){
-
-                    console.log(content[i]);
-                    var keyArr=[];
-                    if(content[i].indexOf(":")>0){
-                        keyArr=content[i].split(":");
-                    }else  if(content[i].indexOf("：")>0){
-                        keyArr=content[i].split("：");
-                    }
-                    somestr+='<div class="item_content"><b>'+keyArr[0]+'：</b>'+'<span class="content-span">'+keyArr[1]+'</span></div>';
 
 
-            }
             console.log(somestr);
             // if(description==null||description==''){
             //     description='暂无介绍';
             // }
+            console.log("index为"+i);
             if(i<8){
                 strHtml+='<div class="tupian"> <img data-original='+img+' src='+img+'></div><div class="content">'+
-                    '<div class="check"><input type="checkbox" value="' +id+'"id="product'+i+'" name="product'+i+'" style="zoom: 180%;"><label ></label></div>'+
+                    '<div class="check"><input type="checkbox" value="' +id+'"id="product'+id+'" name="product'+'" style="zoom: 180%;"><label ></label></div>'+
                     '<div id="'+id+'" class="item_conten id"><b>编号:</b><span class="content-span ">'+id+'</span></div>';
             }else {
                 strHtml+='<div class="tupian"> <img data-original='+img+' src=""></div><div class="content">'+
-                    '<div class="check"><input type="checkbox" value="' +id+'"id="product'+i+'" name="product'+i+'" style="zoom: 180%;"><label ></label></div>'+
+                    '<div class="check"><input type="checkbox" value="' +id+'"id="product'+id+'" name="product'+'" style="zoom: 180%;"><label ></label></div>'+
                     '<div id="'+id+'" class="item_content id"><b>编号:</b><span class="content-span ">'+id+'</div>';
             }
             strHtml+=somestr;
