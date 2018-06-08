@@ -96,7 +96,10 @@ $(function(){
                     title: $('.left').text(), // 分享标题
                     // title: '寻找造物主，投票赢大奖', // 分享标题
                     link: window.location.href, // 分享链接
-                    imgUrl: 'http://binwang.oss-cn-hangzhou.aliyuncs.com/fimg/1.jpg', // 分享图标
+                    // imgUrl: 'http://binwang.oss-cn-hangzhou.aliyuncs.com/fimg/1.jpg', // 分享图标
+                    imgUrl:'http://scratch2-wechat.oss-cn-hangzhou.aliyuncs.com/logo.png',//地址需要短，不能有中文 http协议
+                    // imgUrl:'https://scratch-upload.oss-cn-hangzhou.aliyuncs.com/img/7f855cd0cc52438786d616e352296ee2---28_页面_1.jpg',
+                    // imgUrl:'https://scratch-upload.oss-cn-hangzhou.aliyuncs.com/img/1978042d7b5546f9b3cfcfc6651024c4---分享图片.png',
                     success: function () {
                         // 用户确认分享后执行的回调函数
                         weui.alert('分享成功');
@@ -139,14 +142,18 @@ $(function(){
                     title: $('.left').text(), // 分享标题
                     // title: '寻找造物主，投票赢大奖', // 分享标题
                     // desc: '描述测试', // 分享描述
+                    // desc: '义乌市“望道杯”青少年电脑作品制作大赛十佳作品评选开始啦!邀请您和您的朋友赶快来参与投票吧！', // 分享描述
                     link: window.location.href, // 分享链接
-                    imgUrl: 'http://binwang.oss-cn-hangzhou.aliyuncs.com/fimg/1.jpg', // 分享图标
+                    // imgUrl: 'http://binwang.oss-cn-hangzhou.aliyuncs.com/fimg/1.jpg', // 分享图标
+                    imgUrl:'http://scratch2-wechat.oss-cn-hangzhou.aliyuncs.com/logo.png',
+                    // imgUrl:'https://scratch-upload.oss-cn-hangzhou.aliyuncs.com/img/7f855cd0cc52438786d616e352296ee2---28_页面_1.jpg',
+                    // imgUrl:'https://scratch-upload.oss-cn-hangzhou.aliyuncs.com/img/1978042d7b5546f9b3cfcfc6651024c4---分享图片.png',
                     type: 'link', // 分享类型,music、video或link，不填默认为link
                     dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
                     success: function () {
                         // 用户确认分享后执行的回调函数
 
-                        alert('分享成功');
+                        weui.alert('分享成功');
                         var prizeflag=getCookie("prizeflag");
                         var shareflagvote=getCookie("shareflagvote");
                         var shareflagprize=getCookie("shareflagprize");

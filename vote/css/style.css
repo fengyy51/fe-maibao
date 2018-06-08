@@ -23,16 +23,22 @@ a {
 .weui_dialog_bd{
 	text-align: center;
 }
-.title {
-	height: 45%;
-	line-height: 45px;
+/*.title {*/
+	/*height: 45%;*/
+	/*line-height: 45px;*/
+	/*text-align: center;*/
+	/*background: #04BE02;*/
+	/*color: #fff;*/
+	/*font-size: 1.2rem;*/
+	/*overflow: hidden;*/
+	/**/
+/*}*/
+.title{
 	text-align: center;
-	background: #04BE02;
-	color: #fff;
-	font-size: 1.2rem;
-	overflow: hidden;
+	font-size: 23px;
+	line-height: 40px;
+	color: #333;
 }
-
 .content {
 	margin: 0 3% 20% 3%;
 }

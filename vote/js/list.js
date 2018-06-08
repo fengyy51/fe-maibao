@@ -5,38 +5,55 @@ $(document).ready(function() {
     // {
     //  $('#go').css("display",'none');
     // }
-    var urlVoteParam="/vote/get-vote-param";
+    // var urlVoteParam="/vote/get-vote-param";
     var actName=getCookie("actName");
     var actId=getQueryString("actId");
-    voteParamContact();
-    function voteParamContact() {
-        $.ajax({
-            url:urlServer+urlVoteParam,
-            async:false,
-            data:{
-                "actId":actId
-            },
-            success:function (data) {
-                var code=data.code;
-                if(code==200){
-                    actName=data.data.actName;
-                    $('#title').html(actName);
-
-                }
-            },
-            error:function (error) {
-                console.log(error);
-                weui.alert("获取投票设置失败");
-            }
-        })
-    }
-    $('.title').html(actName);
+    var urlWeiXinProduct="http://test.tuopinpin.com/getproductionid/";//微信公众号展示作品
+    // voteParamContact();
+    // function voteParamContact() {
+    //     $.ajax({
+    //         url:urlServer+urlVoteParam,
+    //         async:false,
+    //         data:{
+    //             "actId":actId
+    //         },
+    //         success:function (data) {
+    //             var code=data.code;
+    //             if(code==200){
+    //                 actName=data.data.actName;
+    //                 $('.title').html(actName);
+    //
+    //             }
+    //         },
+    //         error:function (error) {
+    //             console.log(error);
+    //             weui.alert("获取投票设置失败");
+    //         }
+    //     })
+    // }
+    // $('.title').html(actName);
     $('#vote').click(function () {
         window.location.href="../goods/page/listWork.html?id="+actId;
     });
+    var imgdata=[];//存放图片等的数组
+    getProductWeixin();
+    function getProductWeixin() {
+        $.ajax({
+            url:urlWeiXinProduct,
+            async:false,
+            success: function(data) {
+                imgdata=data;
+            },
+            error: function(error) {
+                weui.alert('获取作品列表出错');
+                console.log(error);
+            }
+        })
+    }
     $.ajax({
         url: urlServer + "/vote/get-vote-number-info",
         type: "GET",
+        async:false,
         data:{
             "actId":actId
         },
@@ -71,7 +88,9 @@ $(document).ready(function() {
             //麦宝
             for(var i=0;i<data.data.length;i++){
                 // var img="http://www.tuopinpin.com/files/"+data.data[i].img;
-                var img=data.data[i].img.slice(1,data.data[i].img.length-1);
+                // var img=data.data[i].img.slice(1,data.data[i].img.length-1);
+                var itemId=data.data[i].itemId;
+                var img="http://www.tuopinpin.com/files/"+imgdata[itemId-1].image;
                 console.log(img);
                 var name=data.data[i].name;
 

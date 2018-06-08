@@ -13,12 +13,16 @@ html,body{
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 	-webkit-overflow-scrolling: touch;
 }
+.weui-dialog__bd{
+	text-align: left!important;
+}
 #alert .weui_dialog_bd{
 	text-align: center;
 }
 .head{
-	background: #04BE02;
-	color:white;
+	/*background: #04BE02;*/
+	color: #0d0d0d;
+
 	width: 90%;
 	/*height: 1.4rem;*/
 	border: 1px solid #f1f1f1 ;
@@ -79,6 +83,7 @@ html,body{
 a:hover { color: #E86A6A; text-decoration: none}
 .body{
 	width: 100%;
+	margin-bottom: 45px;
 }
 div.item{
 	/*width: 7.5rem;*/
@@ -170,13 +175,15 @@ div.item .content .intro{
 #fixedlogo{
 	border: 1px solid #04BE02;
     background: #04be02;
-    font-size: 1rem;
+    font-size: 1.3rem;
     color: #ffffff;
     padding: 1% 2%;
     position: fixed;
-    top: 50%;
+    top: 62%;
     left: 0px;
-    width: 1.2rem;
+    width: 2rem;
+	padding-left: 1rem;
+
 }
 #submit{
 	cursor: pointer;
@@ -233,9 +240,28 @@ a {
 .c-join {
 	margin-bottom: 1%;
 	margin-top: 1%;
-	font-size: 1rem;
+	font-size: 0.8rem;
 	color: #333;
 	margin-left: 3%;
+}
+.c-description{
+	text-indent: 2rem;
+	font-size: 0.8rem;
+	color:crimson;
+	font-weight: bold;
+	/*color:white;*/
+	/*color: #0d0d0d;*/
+	margin-left: 3%;
+	/*border: 1px #04BE02 solid;*/
+	text-align: left;
+	border: 2px dotted;
+	padding: 1.5% 3%;
+}
+.over{
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	width: 86%;
 }
 input[type=checkbox] {
 	visibility: hidden;

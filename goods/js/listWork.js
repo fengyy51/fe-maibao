@@ -1,22 +1,15 @@
     $(document).ready(function() {
         var urlVoteParam="/vote/get-vote-param";
         var urlGetVoteIndex="/vote/get-vote-index";//获取投票活动真正的序号，而非关联活动的序号
-        var urlProductInfo="/vote/get-vote-product-info";
+        var urlProductInfo="/vote/get-vote-product-info";//
+        var urlWeiXinProduct="http://www.tuopinpin.com/getproductionid/";//微信公众号展示作品
+        // var urlWeiXinProduct="http://test.tuopinpin.com/getproductionid/";//微信公众号展示作品
         var urlGetVoteNum='/vote/get-vote-num';
         $('html').width(window.screen.width);
         $('html').css("overflow-x","hidden");
         var countff=getCookie("countff");//投票次数
         var countsharecircle,countsharefriend;
-        if(getCookie("countsharecircle")!=null&&getCookie("countsharecircle")!='null'&&getCookie("countsharecircle")){
-            countsharecircle=getCookie("countsharecircle");//获取分享朋友圈的次数
-        }else {
-            countsharecircle=0;
-        }
-        if(getCookie("countsharefriend")!=null&&getCookie("countsharefriend")!='null'&&getCookie("countsharefriend")){
-            countsharefriend=getCookie("countsharefriend");//获取分享朋友的次数
-        }else {
-            countsharefriend=0;
-        }
+
 
         // 获取用户openid，用户授权
         var openId='yy';
@@ -29,11 +22,11 @@
         }else {
             id=18;
         }
-        // var options={
-        //     url:urlYuming+"/goods/page/listWork.html?id="+id,
-        //     urlServerauth:urlServer+"/user/do-auth",
-        //     APPID:APPIDall
-        // }
+        var options={
+            url:urlYuming+"/goods/page/listWork.html?id="+id,
+            urlServerauth:urlServer+"/user/do-auth",
+            APPID:APPIDall
+        }
         var shareflagvote=getCookie("shareflagvote");//投票分享次数
 
         var num;//已抽奖次数后台返回
@@ -69,25 +62,27 @@
                 title: actName
             });
         });
-        //
-        // function callbackA(id) {
-        //     openId=id;
-        //     getVoteIndex();
-        //     //利用openid，actid获取后台投票数量，由前端检验是否达到上限，后期可以获取openid后再添加
-        //     voteNumContact();
-        //     voteParamContact();
-        // }
-        //线下
-        getVoteIndex();
-        voteParamContact();
 
-        // getWeChatId(options,callbackA);
+        function callbackA(id) {
+            openId=id;
+            getVoteIndex();
+            //利用openid，actid获取后台投票数量，由前端检验是否达到上限，后期可以获取openid后再添加
+            voteNumContact();
+            voteParamContact();
+        }
+        //线下
+        // getVoteIndex();
+        // voteParamContact();
+
+        getWeChatId(options,callbackA);
+
         $("#submit").bind("click", function () {
             countff=getCookie("countff");
 
             // alert(countff);
             // alert(voteMaxNum);
-            if($('#submit').html()=='投票并查看结果'){
+
+            // if($('#submit').html()=='赞<img src="../resource/img/zan.png" style="width: 20px;height: 20px;">一下哟~'){
                 //后台限制投票次数
                 // if(num>=voteMaxNum){
                 //     weui.alert("投票次数已达上限");
@@ -97,7 +92,7 @@
                 //     },1000);
                 // }else
                 if (countff==0){
-                    weui.alert("投票次数已达上限");
+                    weui.alert("点赞次数已达上限");
                     $('#submit').attr("disabled",true);
                     setTimeout(function(){
                         window.location.replace("../../vote/list.html?actId="+actId);
@@ -114,7 +109,7 @@
                             str+=checkboxArr[k].value+ ",";
                         }
                     }
-                    console.log(str);
+                    // alert(str);
                     // for (var i =0; i < length; i++) {
                     //     if ($("#product" + i).attr("checked") != null) {
                     //         num++;
@@ -125,11 +120,24 @@
                     //后台限制投票次数
                     console.log(openId);
                     str=str+'@@@'+openId;
+                    if(getCookie("countsharecircle")!=null&&getCookie("countsharecircle")!='null'&&getCookie("countsharecircle")){
+                        countsharecircle=getCookie("countsharecircle");//获取分享朋友圈的次数
+                        console.log("cookie+countsharecirecle"+countsharecircle);
+                    }else {
+                        countsharecircle=0;
+                    }
+                    if(getCookie("countsharefriend")!=null&&getCookie("countsharefriend")!='null'&&getCookie("countsharefriend")){
+                        countsharefriend=getCookie("countsharefriend");//获取分享朋友的次数
+                        console.log("cookie+countsharefriend"+countsharefriend);
+                    }else {
+                        countsharefriend=0;
+                    }
                     console.log(countsharecircle);
                     console.log(countsharefriend);
                     str+='@@@'+countsharefriend+'@@@'+countsharecircle;
                     console.log(str);
-                    if (num <= proNum) {
+                    // alert(num);
+                    if (num <= proNum && num>0) {
                         // str = str.substring(0, str.length - 1);
                         console.log(str);
                         var voteflag=false;
@@ -155,7 +163,7 @@
                                             setCookie_timedetail("countff", countff, '24:00:00');
                                             // setCookie_29("countsharefriend",0);
                                             // setCookie_29("countsharecircle",0);
-                                            $('#submit').html("已投票");
+                                            $('#submit').html("已点赞");
                                             voteflag=true;
                                             setTimeout(function(){
                                                 window.location.replace("../../vote/list.html?actId="+actId);
@@ -164,7 +172,7 @@
                                             voteflag=false;
                                             var msg=data.data.msg;
                                             if(msg=='已投票'){
-                                                $('#submit').html("已投票");
+                                                $('#submit').html("已点赞");
                                                 voteflag=true;
                                                 countff--;
                                                 setCookie_timedetail("countff",countff,'24:00:00');
@@ -173,13 +181,13 @@
                                                 },1000);
                                             }else {
                                                 weui.alert(msg);
-                                                $('#submit').html("投票并查看结果");
+                                                $('#submit').html('赞<img src="../resource/img/zan.png" style="width: 20px;height: 20px;">一下哟~');
                                                 $('#submit').removeAttr("disabled");
                                             }
                                         }
                                     }else{
-                                        weui.alert("投票失败");
-                                        $('#submit').html("投票并查看结果");
+                                        weui.alert("点赞失败");
+                                        $('#submit').html('赞<img src=\"../resource/img/zan.png\" style=\"width: 20px;height: 20px;\">一下哟~');
                                         $('#submit').removeAttr("disabled");
                                     }
 
@@ -189,7 +197,7 @@
                                     weui.alert(error);
                                     voteflag=false;
                                     $('#submit').removeAttr("disabled");
-                                    weui.alert("投票未成功，再来一次哟！");
+                                    weui.alert("点赞未成功，再来一次哟！");
                                 }
                             });
                         }
@@ -199,12 +207,20 @@
                     }
 
                 }
-            }
+            // }
 
         });
         //获取活动名称，每天可投票次数等配置,投票时间限制管理
-
-
+        //fixed在某些机型失效
+        var h=$(window).height();
+        $(window).resize(function() {
+            if($(window).height()<h){
+                $('#submit').hide();
+            }
+            if($(window).height()>=h){
+                $('#submit').show();
+            }
+        });
 
         function voteNumContact() {
             $.ajax({
@@ -220,15 +236,16 @@
                         num=data.data;
                         if(num>=voteMaxNum){
                             var votecount=num-voteMaxNum;
-                            $('#submit').html('已达投票上限');
+                            $('#submit').html('已达点赞次数上限');
                             $('#submit').attr("disabled",true);
-                            $('.c-join').html('请投票（最多选择'+proNum+'个，投票'+votecount+'次）');
+                            // $('.c-join').html('大家一起来点赞（最多选择'+proNum+'个）');
+                                //，投票'+votecount+'次）'
                         }
                     }
                 },
                 error:function (error) {
                     console.log(error);
-                    weui.alert("获取当天投票数失败");
+                    weui.alert("获取当天点赞数失败");
                 }
             })
         }
@@ -242,12 +259,13 @@
                 success:function (data) {
                     if(data.code==200){
                         voteIndex=data.data;
-                        productInfoContact(voteIndex);
+                        getProductWeixin();
+                        // productInfoContact(voteIndex);
                     }
                 },
                 error:function (error) {
                     console.log(error);
-                    alert("获取投票活动真正序号失败");
+                    alert("获取点赞活动真正序号失败");
                 }
             })
         }
@@ -274,10 +292,10 @@
                         //判断投票时间限制
                         var now=Date.parse(new Date());
                         if(now<Date.parse(begin.replace(/-/g, '/'))){
-                            $('#submit').html("投票尚未开始");
+                            $('#submit').html("作品点赞尚未开始");
                             $('#submit').attr("disabled",true);
                         }else if(now>Date.parse(begin.replace(/-/g, '/'))&&now>Date.parse(end.replace(/-/g, '/'))){
-                            $('#submit').html("投票已结束");
+                            $('#submit').html("作品点赞已结束");
                             $('#submit').attr("disabled",true);
                         }else if(now>Date.parse(begin.replace(/-/g, '/'))&&now<Date.parse(end.replace(/-/g, '/'))){
                             // $('#submit').html("投票并查看结果");
@@ -314,13 +332,37 @@
                         }
                         countff = getCookie("countff");
                         // weui.alert("您可投票" + countff + "次");
-                        $('.c-join').html('请投票（最多选择'+proNum+'个，投票'+countff+'次）');
+                        // $('.c-join').html('大家一起来点赞（最多选择'+proNum+'个）');
+                    //    ，投票'+countff+'次）
 
                     }
                 },
                 error:function (error) {
                     console.log(error);
-                    weui.alert("获取投票设置失败");
+                    weui.alert("获取点赞设置失败");
+                }
+            })
+        }
+        function getProductWeixin() {
+            $.ajax({
+                url:urlWeiXinProduct,
+                success: function(data) {
+                    var list = data;
+                        length=list.length;
+                        makeWeiXinList(list);
+                        $(".item div.content").bind("click", function () {
+                            var product = $(this).find("input");
+                            if (product.attr("checked") == null) {
+                                product.attr("checked", "checked");
+                            } else {
+                                product.removeAttr("checked");
+                            }
+                        });
+
+                },
+                error: function(error) {
+                    weui.alert('获取作品列表出错');
+                    console.log(error);
                 }
             })
         }
@@ -354,11 +396,10 @@
                 }
             });
         }
-//        麦宝修改
-        function makeList(list) {
+        function makeWeiXinList(list){
             var strHtml = '';
             for (var i = 0; i < length; i++) {
-                strHtml+=showDetail(list[i],i);
+                strHtml+=showWeiXinDetail(list[i],i+1);
             }
             $('#listWork .body').html(strHtml);
             $('.intro1').width(window.screen.width*0.83-120);
@@ -366,10 +407,10 @@
             $('#text').width(wwidth*0.46);
             $('#button1 a').width(wwidth*0.16);
             $('#button2 a').width(wwidth*0.16);
-             // var size=parseInt($('div.item .content').height()/6);
-            var size=wwidth / 25 + 'px';
-             console.log(size);
-            $('div.item .content').css('line-height',wwidth/23+2+'px');
+            // var size=parseInt($('div.item .content').height()/6);
+            var size=wwidth / 30+ 'px';
+            console.log(size);
+            $('div.item .content').css('line-height',wwidth/30+2+'px');
             $('div.item .content').css('font-size',size+'!important');
             var font=$('div.item .content').css("font-size");
             // var font=window.getComputedStyle(document.getElementsByClassName("content-span")[0]).lineHeight;
@@ -396,6 +437,118 @@
             // console.log($('div.item .content').height());
             //
         }
+//        麦宝修改
+        function makeList(list) {
+            var strHtml = '';
+            for (var i = 0; i < length; i++) {
+                strHtml+=showDetail(list[i],i);
+            }
+            $('#listWork .body').html(strHtml);
+            $('.intro1').width(window.screen.width*0.83-120);
+            var wwidth=window.screen.width;
+            $('#text').width(wwidth*0.46);
+            $('#button1 a').width(wwidth*0.16);
+            $('#button2 a').width(wwidth*0.16);
+             // var size=parseInt($('div.item .content').height()/6);
+            var size=wwidth / 30+ 'px';
+             console.log(size);
+            $('div.item .content').css('line-height',wwidth/30+2+'px');
+            $('div.item .content').css('font-size',size+'!important');
+            var font=$('div.item .content').css("font-size");
+            // var font=window.getComputedStyle(document.getElementsByClassName("content-span")[0]).lineHeight;
+
+            console.log(font);
+            var contentheight=font.slice(0,font.length-2)*(contentlen+1)*1.2;
+
+            if(contentheight<wwidth*0.4*0.75){
+                $('div.item').height(wwidth*0.4*0.75);
+                $('div.item .content').height(wwidth*0.4*0.75);
+            }else {
+                $('div.item').height(contentheight+"px");
+                $('div.item .content').height(contentheight+"px");
+                console.log($('div.item .content').height());
+            }
+            // $('div.item').height(wwidth*0.4*0.75);
+            $('div.item .tupian').width(wwidth*0.4);
+            $('div.item .tupian').height(wwidth*0.4*0.75);
+            $('.tupian img').width(wwidth*0.4);
+            $('.tupian img').height(wwidth*0.4*0.75);
+            //动态修改content文字大小，行高
+            // $('div.item .content').height(wwidth*0.4*0.75);
+            // console.log(j);
+            // console.log($('div.item .content').height());
+            //
+        }
+        function showWeiXinDetail(item,i) {
+            var strHtml='<div class="item">';
+            // var id=item.id,
+            //     img=item.imgUrl.slice(1,item.imgUrl.length-1);
+            // var somestr="";
+            // if(item.content.trim()!=""){
+            //     content=item.content.split("&&&");
+            //     contentlen=Math.max(contentlen,content.length);
+            //     for(var i=0;i<content.length;i++){
+            //         console.log(content[i]);
+            //         if(content[i].trim()!=""){
+            //             var keyArr=[];
+            //             if(content[i].indexOf(":")>0){
+            //                 keyArr=content[i].split(":");
+            //             }else  if(content[i].indexOf("：")>0){
+            //                 keyArr=content[i].split("：");
+            //             }
+            //             somestr+='<div class="item_content"><span class="content-span">'+keyArr[0]+'：</span>'+'<span class="content-span">'+keyArr[1]+'</span></div>';
+            //
+            //         }
+            //
+            //
+            //     }
+            // }
+
+            var proId=item.production,
+                author=item.author,
+                school=item.school,
+                img="http://www.tuopinpin.com/files/"+item.image,
+                operationInstruction=item['operation_instructions'],
+                description=item.description;
+            var authorlen=author.length;
+            var name=item.image.slice(authorlen+1,-10);
+            //
+            // var proId=item.proId,
+            //     id=item.id,
+            //     name=item.name,
+            //     author=item.author,
+            //     // img="http://www.tuopinpin.com/files/"+item.img,
+            //     description=item.description;
+
+
+            // console.log(somestr);
+            // if(description==null||description==''){
+            //     description='暂无介绍';
+            // }
+            if(i<8){
+                strHtml+='<div class="tupian"> <img data-original='+img+' src='+img+'></div><div class="content">'+
+                    '<div class="check"><input type="checkbox" value="' +i+'"id="product'+id+'" name="product'+'" style="zoom: 180%;"><label ></label></div>'+
+                        '<div id="proId" style="display: none;">'+proId+'</div>'+
+                    '<div id="'+id+'" class="item_conten id"><span class="content-span">编号:</span><span class="content-span id">'+i+'</span></div>';
+            }else {
+                strHtml += '<div class="tupian"> <img data-original=' + img + ' src=""></div><div class="content">' +
+                    '<div class="check"><input type="checkbox" value="' + i + '"id="product' + id + '" name="product' + '" style="zoom: 180%;"><label ></label></div>' +
+                    '<div id="proId" style="display: none;">' + proId + '</div>' +
+                    '<div id="' + id + '" class="item_conten id"><span class="content-span">编号:</span><span class="content-span id">' + i + '</span></div>';
+            }
+            strHtml+= '<div id="name" class="over">名称：'+'<span class="content-span">'+name+'</span></div>'+
+            '<div id="school" class="over">学校：'+'<span class="content-span">'+school+'</span></div>'+
+            '<div id="author" class="over">作者：'+'<span class="content-span">'+author+'</span></div>'+
+            '<div id="description" class="over">介绍：'+'<span class="content-span">'+description+'</span></div>'+
+            '<div id="operationInstruction" class="over">详细说明：'+'<span class="content-span">'+operationInstruction+'</span></div>' ;
+            // strHtml+='<div id="id" style="display: none;">'+id+'</div>'+
+            //     '<div id="proId" style="display: none;">'+proId+'</div>'+
+            //     '<div id="name"><b>名称：</b>'+'<span class="content-span">'+name+'</span></div>'+
+            //     '<div id="author"><b>作者：</b>'+'<span class="content-span">'+author+'</span></div>'+
+            //     '<div id="description"><b>介绍：</b>'+'<span class="content-span">'+description+'</span></div>';
+            strHtml+='</div></div></div>';
+            return strHtml;
+        }
         function showDetail(item,i) {
             var strHtml='<div class="item">';
             var id=item.id,
@@ -413,7 +566,7 @@
                         }else  if(content[i].indexOf("：")>0){
                             keyArr=content[i].split("：");
                         }
-                        somestr+='<div class="item_content"><b>'+keyArr[0]+'：</b>'+'<span class="content-span">'+keyArr[1]+'</span></div>';
+                        somestr+='<div class="item_content"><span class="content-span">'+keyArr[0]+'：</span>'+'<span class="content-span">'+keyArr[1]+'</span></div>';
 
                     }
 
@@ -437,11 +590,11 @@
             if(i<8){
                 strHtml+='<div class="tupian"> <img data-original='+img+' src='+img+'></div><div class="content">'+
                     '<div class="check"><input type="checkbox" value="' +id+'"id="product'+id+'" name="product'+'" style="zoom: 180%;"><label ></label></div>'+
-                    '<div id="'+id+'" class="item_conten id"><b>编号:</b><span class="content-span ">'+id+'</span></div>';
+                    '<div id="'+id+'" class="item_conten id"><span class="content-span">编号:</span><span class="content-span id">'+id+'</span></div>';
             }else {
                 strHtml+='<div class="tupian"> <img data-original='+img+' src=""></div><div class="content">'+
                     '<div class="check"><input type="checkbox" value="' +id+'"id="product'+id+'" name="product'+'" style="zoom: 180%;"><label ></label></div>'+
-                    '<div id="'+id+'" class="item_content id"><b>编号:</b><span class="content-span ">'+id+'</div>';
+                    '<div id="'+id+'" class="item_content id"><span class="content-span">编号:</span><span class="content-span id ">'+id+'</div>';
             }
             strHtml+=somestr;
                 // '<div id="name"><b>名称：</b>'+'<span class="content-span">'+name+'</span></div>'+
@@ -528,13 +681,104 @@
 //             // }
 //
 //         }
+//        点击图片时也投票
+        $('.body').delegate(".item div.tupian","click",function () {
+            countff=getCookie("countff");
+            if(countff!=0){
+                var num = 0;
+                var str = "";
+                var curTime=(new Date()).valueOf();
+                var selectValue=$(this).parent().find('span.id').text();
+                num++;
+                str+=selectValue+',';
+                console.log(selectValue);
+                // var checkboxArr=document.querySelectorAll('input[type="checkbox"]');
+                // for(var k in checkboxArr){
+                //     if(checkboxArr[k].checked){
+                //         num++;
+                //         str+=checkboxArr[k].value+ ",";
+                //     }
+                // }
+                // alert(str);
+                // for (var i =0; i < length; i++) {
+                //     if ($("#product" + i).attr("checked") != null) {
+                //         num++;
+                //         str += $("#product" + i).val() + ",";
+                //     }
+                // }
+                str=str+'@@@'+curTime;
+                //后台限制投票次数
+                console.log(openId);
+                str=str+'@@@'+openId;
+                if(getCookie("countsharecircle")!=null&&getCookie("countsharecircle")!='null'&&getCookie("countsharecircle")){
+                    countsharecircle=getCookie("countsharecircle");//获取分享朋友圈的次数
+                    console.log("cookie+countsharecirecle"+countsharecircle);
+                }else {
+                    countsharecircle=0;
+                }
+                if(getCookie("countsharefriend")!=null&&getCookie("countsharefriend")!='null'&&getCookie("countsharefriend")){
+                    countsharefriend=getCookie("countsharefriend");//获取分享朋友的次数
+                    console.log("cookie+countsharefriend"+countsharefriend);
+                }else {
+                    countsharefriend=0;
+                }
+                console.log(countsharecircle);
+                console.log(countsharefriend);
+                str+='@@@'+countsharefriend+'@@@'+countsharecircle;
+                console.log(str);
+                // alert(num);
+                if (num <= proNum && num>0) {
+                    // str = str.substring(0, str.length - 1);
+                    console.log(str);
+                    var voteflag=false;
+                    // $('#submit').attr("disabled",true);
+                    if(voteflag==false){
+                        $.ajax({
+                            url: urlServer + "/vote/post-vote-number-info",
+                            type: "POST",
+                            async:false,
+                            data: {
+                                "str": str,
+                                "actId":actId,
+                            },
+                            success: function(data) {
+                                //后台控制投票次数，返回是否可以投票
+                                var code=data.code;
+                                console.log(data);
+                                console.log(code);
+                                console.log("cc");
+                                // alert(data);
+                                if(code==200){
+                                    // var result = data.data.result;
+                                    // if (result == true) {
+                                        --countff;
+                                        console.log(countff);
+                                        setCookie_timedetail("countff", countff, '24:00:00');
+                                        // setCookie_29("countsharefriend",0);
+                                        // setCookie_29("countsharecircle",0);
+                                        voteflag=true;
+                                }
+                            },
+                            error: function(error) {
+                                console.log(error);
+                            }
+                        });
+                    }
+
+                } else {
+                    weui.alert("您已选择"+num+"个，"+"请最多选择"+proNum+"个作品哟！");
+                }
+
+            }
+            // }
+        });
         $(".body").delegate(".item div.tupian","click",function() {
             // console.log($(this).parent().find('#proId').text());
-            // window.location.href = "http://m.tuopinpin.com/#production_detail/"+ $(this).parent().find('#proId').text();
+            window.location.href = "http://m.tuopinpin.com/#production_detail/"+ $(this).parent().find('#proId').text();
             // +$(this).find('.id').text();
-            window.location.href = "../page/dow.html?id=" + $(this).parent().find('.id span').text()+"&actId="+voteIndex;
+            // window.location.href = "../page/dow.html?id=" + $(this).parent().find('.id span.id').text()+"&actId="+voteIndex;
         });
-        var now=Date.now();
+        // var now=Date.now();
 
         //点击投票 进行时间、次数判断
         // $("#button2").on("click",function() {
