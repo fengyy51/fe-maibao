@@ -8,7 +8,8 @@ $(document).ready(function() {
     // var urlVoteParam="/vote/get-vote-param";
     var actName=getCookie("actName");
     var actId=getQueryString("actId");
-    var urlWeiXinProduct="http://test.tuopinpin.com/getproductionid/";//微信公众号展示作品
+    var urlWeiXinProduct="http://www.tuopinpin.com/getproductionid/";//微信公众号展示作品
+    // var urlWeiXinProduct="http://test.tuopinpin.com/getproductionid/";//微信公众号展示作品
     // voteParamContact();
     // function voteParamContact() {
     //     $.ajax({
